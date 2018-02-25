@@ -1,5 +1,5 @@
 /*!
- * dmn-js - dmn-viewer v0.9.1
+ * dmn-js - dmn-viewer v0.11.0
 
  * Copyright 2015 camunda Services GmbH and other contributors
  *
@@ -8,10 +8,10 @@
  *
  * Source Code: https://github.com/dmn-io/dmn-js
  *
- * Date: 2018-01-08
+ * Date: 2018-02-25
  */
 
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.DmnJS = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.DmnJS = f()}})(function(){var define,module,exports;return (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(_dereq_,module,exports){
 /**
  * The code in the <project-logo></project-logo> area
  * must not be changed.
@@ -451,7 +451,8 @@ Viewer.prototype._init = function(container, moddle, options) {
       staticModules = [
         {
           drdjs: [ 'value', this ],
-          moddle: [ 'value', moddle ]
+          moddle: [ 'value', moddle ],
+          table: [ 'value', this.table ]
         }
       ];
 
@@ -841,8 +842,9 @@ function DrdRenderer(eventBus, pathMap, styles) {
   }
 
   function renderLabel(p, label, options) {
-    var text = textUtil.createText(p, label || '', options);
+    var text = textUtil.createText(label || '', options);
     domClasses(text).add('djs-label');
+    svgAppend(p, text);
 
     return text;
   }
@@ -1332,6 +1334,9 @@ DefinitionIdView.prototype._init = function() {
 
   parent.appendChild(container);
 
+  this.nameElement = domQuery('.dmn-definitions-name', this._container);
+  this.idElement = domQuery('.dmn-definitions-id', this._container);
+
   domDelegate.bind(container, '.dmn-definitions-name, .dmn-definitions-id', 'mousedown', function(event) {
     event.stopPropagation();
   });
@@ -1342,12 +1347,10 @@ DefinitionIdView.prototype._init = function() {
 };
 
 DefinitionIdView.prototype.update = function(newName) {
-  var businessObject = this._canvas.getRootElement().businessObject,
-      nameElement = domQuery('.dmn-definitions-name', this._container),
-      idElement = domQuery('.dmn-definitions-id', this._container);
+  var businessObject = this._canvas.getRootElement().businessObject;
 
-  nameElement.textContent = businessObject.name;
-  idElement.textContent = businessObject.id;
+  this.nameElement.textContent = businessObject.name;
+  this.idElement.textContent = businessObject.id;
 };
 
 
@@ -1362,8 +1365,8 @@ DefinitionIdView.HTML_MARKUP =
 },{"263":263,"264":264,"266":266}],8:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [ ],
-  __init__: [ 'definitionIdView' ],
-  definitionIdView: [ 'type', _dereq_(7) ]
+  __init__: [ 'definitionPropertiesView' ],
+  definitionPropertiesView: [ 'type', _dereq_(7) ]
 };
 
 },{"7":7}],9:[function(_dereq_,module,exports){
@@ -2378,17 +2381,17 @@ Viewer.prototype._modules = [
   _dereq_(20),
   _dereq_(101),
   _dereq_(302),
-  _dereq_(40),
-  _dereq_(54),
-  _dereq_(25),
-  _dereq_(47),
-  _dereq_(58),
-  _dereq_(49),
-  _dereq_(36),
+  _dereq_(42),
   _dereq_(30),
+  _dereq_(25),
+  _dereq_(49),
+  _dereq_(58),
+  _dereq_(51),
+  _dereq_(38),
+  _dereq_(32),
   _dereq_(28),
-  _dereq_(52),
-  _dereq_(43),
+  _dereq_(54),
+  _dereq_(45),
 
   _dereq_(300),
   _dereq_(298),
@@ -2434,7 +2437,7 @@ function addProjectLogo(container) {
 
 /* </project-logo> */
 
-},{"101":101,"118":118,"126":126,"134":134,"20":20,"247":247,"25":25,"250":250,"254":254,"264":264,"265":265,"266":266,"267":267,"28":28,"284":284,"294":294,"296":296,"298":298,"30":30,"300":300,"302":302,"36":36,"40":40,"43":43,"47":47,"49":49,"52":52,"54":54,"58":58,"59":59,"64":64,"65":65}],20:[function(_dereq_,module,exports){
+},{"101":101,"118":118,"126":126,"134":134,"20":20,"247":247,"25":25,"250":250,"254":254,"264":264,"265":265,"266":266,"267":267,"28":28,"284":284,"294":294,"296":296,"298":298,"30":30,"300":300,"302":302,"32":32,"38":38,"42":42,"45":45,"49":49,"51":51,"54":54,"58":58,"59":59,"64":64,"65":65}],20:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(63),
@@ -2818,6 +2821,90 @@ module.exports = {
 
 var domify = _dereq_(264);
 
+var inherits = _dereq_(126);
+
+var BaseModule = _dereq_(303);
+
+/**
+ * View and edit decision properties.
+ * Extends TableName by adding a table ID.
+ *
+ * @param {EventBus} eventBus
+ */
+function DecisionProperties(eventBus, sheet, tableName) {
+
+  BaseModule.call(this, eventBus, sheet, tableName);
+
+  this.node = domify(
+    '<header><h3>' +
+    this.tableName +
+    '</h3><div class="tjs-table-id mappings"></div></header'
+  );
+
+  var self = this;
+
+  eventBus.on('tableName.allowEdit', function(event) {
+    if (event.editAllowed) {
+      self.node.querySelector('.tjs-table-id').setAttribute('contenteditable', true);
+
+      self.node.querySelector('.tjs-table-id').addEventListener('blur', function(evt) {
+        var newId = evt.target.textContent;
+        if (newId !== self.getId()) {
+          eventBus.fire('tableName.editId', {
+            newId: newId
+          });
+        }
+      }, true);
+    }
+  });
+
+  this.semantic = null;
+}
+
+inherits(DecisionProperties, BaseModule);
+
+DecisionProperties.$inject = [ 'eventBus', 'sheet', 'config.tableName' ];
+
+module.exports = DecisionProperties;
+
+DecisionProperties.prototype.setSemantic = function(semantic) {
+  this.semantic = semantic;
+  this.setName(semantic.name);
+  this.setId(semantic.id);
+};
+
+DecisionProperties.prototype.setName = function(newName) {
+  this.semantic.name = newName;
+  this.node.querySelector('h3').textContent = newName || '';
+};
+
+DecisionProperties.prototype.getName = function() {
+  return this.semantic.name;
+};
+
+DecisionProperties.prototype.setId = function(newId) {
+  if (newId) {
+    this.semantic.id = newId;
+  }
+  
+  this.node.querySelector('div').textContent = this.semantic.id || '';
+};
+
+DecisionProperties.prototype.getId = function() {
+  return this.semantic.id;
+};
+
+},{"126":126,"264":264,"303":303}],30:[function(_dereq_,module,exports){
+module.exports = {
+  __init__: [ 'tableName' ],
+  tableName: [ 'type', _dereq_(29) ]
+};
+
+},{"29":29}],31:[function(_dereq_,module,exports){
+'use strict';
+
+var domify = _dereq_(264);
+
 var hasSecondaryModifier = _dereq_(109).hasSecondaryModifier;
 
 var OFFSET_X = 2,
@@ -2919,13 +3006,13 @@ Descriptions.prototype.openPopover = function(context) {
   node.textContent = context.content.description;
 };
 
-},{"109":109,"264":264}],30:[function(_dereq_,module,exports){
+},{"109":109,"264":264}],32:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'descriptions' ],
-  descriptions: [ 'type', _dereq_(29) ]
+  descriptions: [ 'type', _dereq_(31) ]
 };
 
-},{"29":29}],31:[function(_dereq_,module,exports){
+},{"31":31}],33:[function(_dereq_,module,exports){
 'use strict';
 
 var inherits = _dereq_(126);
@@ -2988,7 +3075,7 @@ ElementFactory.prototype.create = function(elementType, attrs) {
 
 };
 
-},{"126":126,"286":286}],32:[function(_dereq_,module,exports){
+},{"126":126,"286":286}],34:[function(_dereq_,module,exports){
 'use strict';
 
 function TableFactory(moddle) {
@@ -3116,13 +3203,13 @@ TableFactory.prototype.createOutputValues = function(output) {
 
 module.exports = TableFactory;
 
-},{}],33:[function(_dereq_,module,exports){
+},{}],35:[function(_dereq_,module,exports){
 module.exports = {
-  tableFactory: [ 'type', _dereq_(32) ],
-  elementFactory: [ 'type', _dereq_(31) ]
+  tableFactory: [ 'type', _dereq_(34) ],
+  elementFactory: [ 'type', _dereq_(33) ]
 };
 
-},{"31":31,"32":32}],34:[function(_dereq_,module,exports){
+},{"33":33,"34":34}],36:[function(_dereq_,module,exports){
 'use strict';
 
 var domify = _dereq_(264),
@@ -3273,7 +3360,7 @@ HitPolicy.prototype.getAggregation = function() {
 
 module.exports = HitPolicy;
 
-},{"261":261,"264":264,"294":294}],35:[function(_dereq_,module,exports){
+},{"261":261,"264":264,"294":294}],37:[function(_dereq_,module,exports){
 'use strict';
 
 function convertOperators(operator) {
@@ -3308,19 +3395,19 @@ HitPolicyRenderer.$inject = [
 
 module.exports = HitPolicyRenderer;
 
-},{}],36:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'hitPolicy', 'hitPolicyRenderer' ],
   __depends__: [
     _dereq_(101),
     _dereq_(307),
-    _dereq_(40)
+    _dereq_(42)
   ],
-  hitPolicy: [ 'type', _dereq_(34) ],
-  hitPolicyRenderer: [ 'type', _dereq_(35) ]
+  hitPolicy: [ 'type', _dereq_(36) ],
+  hitPolicyRenderer: [ 'type', _dereq_(37) ]
 };
 
-},{"101":101,"307":307,"34":34,"35":35,"40":40}],37:[function(_dereq_,module,exports){
+},{"101":101,"307":307,"36":36,"37":37,"42":42}],39:[function(_dereq_,module,exports){
 'use strict';
 
 var domify = _dereq_(264),
@@ -3471,7 +3558,7 @@ IoLabel.prototype.getRow = function() {
   return this.row;
 };
 
-},{"108":108,"136":136,"264":264}],38:[function(_dereq_,module,exports){
+},{"108":108,"136":136,"264":264}],40:[function(_dereq_,module,exports){
 'use strict';
 
 function IoLabelRenderer(
@@ -3495,7 +3582,7 @@ IoLabelRenderer.$inject = [
 
 module.exports = IoLabelRenderer;
 
-},{}],39:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 'use strict';
 
 var inherits = _dereq_(126);
@@ -3527,25 +3614,25 @@ IoLabelRules.prototype.init = function() {
 
 };
 
-},{"126":126,"94":94}],40:[function(_dereq_,module,exports){
+},{"126":126,"94":94}],42:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'ioLabel', 'ioLabelRules', 'ioLabelRenderer' ],
   __depends__: [
     _dereq_(101)
   ],
-  ioLabel: [ 'type', _dereq_(37) ],
-  ioLabelRules: [ 'type', _dereq_(39) ],
-  ioLabelRenderer: [ 'type', _dereq_(38) ]
+  ioLabel: [ 'type', _dereq_(39) ],
+  ioLabelRules: [ 'type', _dereq_(41) ],
+  ioLabelRenderer: [ 'type', _dereq_(40) ]
 };
 
-},{"101":101,"37":37,"38":38,"39":39}],41:[function(_dereq_,module,exports){
+},{"101":101,"39":39,"40":40,"41":41}],43:[function(_dereq_,module,exports){
 module.exports = "<div class=\"literal-expression-editor\">\n  <textarea placeholder=\"return obj.propertyName;\"></textarea>\n\n  <div>\n    <div class=\"literal-expression-field\">\n      <div class=\"dmn-combobox\">\n        <label>Variable Name:</label>\n        <input class=\"variable-name\" placeholder=\"varName\">\n      </div>\n    </div>\n    <div class=\"literal-expression-field variable-type\">\n    </div>\n  </div>\n  <div>\n    <div class=\"literal-expression-field expression-language\">\n    </div>\n  </div>\n</div>\n";
 
-},{}],42:[function(_dereq_,module,exports){
+},{}],44:[function(_dereq_,module,exports){
 'use strict';
 
 var domify = _dereq_(264);
-var template = _dereq_(41);
+var template = _dereq_(43);
 
 var ComboBox = _dereq_(294);
 
@@ -3648,16 +3735,16 @@ LiteralExpressionEditor.prototype.show = function(decision) {
 
 };
 
-},{"264":264,"294":294,"41":41}],43:[function(_dereq_,module,exports){
+},{"264":264,"294":294,"43":43}],45:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'literalExpressionEditor' ],
-  literalExpressionEditor: [ 'type', _dereq_(42) ]
+  literalExpressionEditor: [ 'type', _dereq_(44) ]
 };
 
-},{"42":42}],44:[function(_dereq_,module,exports){
+},{"44":44}],46:[function(_dereq_,module,exports){
 module.exports = "<div>\n  <div class=\"links\">\n    <div class=\"toggle-type\">\n      <label>{{ 'Use:' | translate }}</label>\n      <a class=\"expression\">{{ 'Expression' | translate }}</a>\n      /\n      <a class=\"script\">{{ 'Script' | translate }}</a>\n    </div>\n    <a class=\"dmn-icon-clear\"></a>\n  </div>\n  <div class=\"expression region\">\n    <div class=\"input-expression\">\n       <label>{{ 'Expression:' | translate }}</label>\n      <input placeholder=\"propertyName\">\n    </div>\n    <div class=\"input-expression\">\n      <label>{{ 'Input Variable Name:' | translate }}</label>\n      <input placeholder=\"cellInput\">\n    </div>\n  </div>\n  <div class=\"script region\">\n    <textarea placeholder=\"return obj.propertyName;\"></textarea>\n    <div class=\"input-expression\">\n      <label>{{ 'Input Variable Name:' | translate }}</label>\n      <input placeholder=\"cellInput\">\n    </div>\n  </div>\n</div>\n";
 
-},{}],45:[function(_dereq_,module,exports){
+},{}],47:[function(_dereq_,module,exports){
 'use strict';
 
 var domify = _dereq_(264),
@@ -3665,7 +3752,7 @@ var domify = _dereq_(264),
     assign = _dereq_(250),
     forEach = _dereq_(136);
 
-var exprTemplate = _dereq_(44);
+var mappingTypeTemplate = _dereq_(46);
 
 var ComboBox = _dereq_(294);
 
@@ -3778,7 +3865,7 @@ function MappingsRow(
       // cell content is the input expression of the clause
       content = element.content = column.businessObject.inputExpression;
 
-      var template = domify(parseTemplate(exprTemplate));
+      var template = domify(parseTemplate(mappingTypeTemplate));
 
       // initializing the comboBox
       var comboBox = new ComboBox({
@@ -3986,7 +4073,7 @@ MappingsRow.prototype.getRow = function() {
   return this.row;
 };
 
-},{"136":136,"250":250,"261":261,"264":264,"294":294,"44":44}],46:[function(_dereq_,module,exports){
+},{"136":136,"250":250,"261":261,"264":264,"294":294,"46":46}],48:[function(_dereq_,module,exports){
 'use strict';
 
 var domClasses = _dereq_(261);
@@ -4026,7 +4113,7 @@ MappingsRowRenderer.$inject = [
 
 module.exports = MappingsRowRenderer;
 
-},{"261":261}],47:[function(_dereq_,module,exports){
+},{"261":261}],49:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(101),
@@ -4034,11 +4121,11 @@ module.exports = {
     _dereq_(296)
   ],
   __init__: [ 'mappingsRow', 'mappingsRowRenderer' ],
-  mappingsRow: [ 'type', _dereq_(45) ],
-  mappingsRowRenderer: [ 'type', _dereq_(46) ]
+  mappingsRow: [ 'type', _dereq_(47) ],
+  mappingsRowRenderer: [ 'type', _dereq_(48) ]
 };
 
-},{"101":101,"14":14,"296":296,"45":45,"46":46}],48:[function(_dereq_,module,exports){
+},{"101":101,"14":14,"296":296,"47":47,"48":48}],50:[function(_dereq_,module,exports){
 'use strict';
 
 var domClasses = _dereq_(261),
@@ -4302,20 +4389,20 @@ SimpleMode.prototype.isString = function(textContent) {
   return firstCondition && !secondCondition;
 };
 
-},{"261":261,"264":264}],49:[function(_dereq_,module,exports){
+},{"261":261,"264":264}],51:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'simpleMode' ],
   __depends__: [
     _dereq_(101)
   ],
-  simpleMode: [ 'type', _dereq_(48) ]
+  simpleMode: [ 'type', _dereq_(50) ]
 };
 
-},{"101":101,"48":48}],50:[function(_dereq_,module,exports){
+},{"101":101,"50":50}],52:[function(_dereq_,module,exports){
 'use strict';
 
 var domify = _dereq_(264),
-    utils  = _dereq_(51);
+    utils  = _dereq_(53);
 
 var isStringCell = utils.isStringCell,
     parseString  = utils.parseString;
@@ -4397,7 +4484,7 @@ StringView.$inject = ['eventBus', 'simpleMode'];
 
 module.exports = StringView;
 
-},{"264":264,"51":51}],51:[function(_dereq_,module,exports){
+},{"264":264,"53":53}],53:[function(_dereq_,module,exports){
 'use strict';
 
 var hasStringType = function(column) {
@@ -4489,93 +4576,15 @@ module.exports = {
   }
 };
 
-},{}],52:[function(_dereq_,module,exports){
+},{}],54:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'stringView' ],
-  stringView: [ 'type', _dereq_(50) ]
+  stringView: [ 'type', _dereq_(52) ]
 };
 
-},{"50":50}],53:[function(_dereq_,module,exports){
-'use strict';
-
-var domify = _dereq_(264);
-
-var inherits = _dereq_(126);
-
-var BaseModule = _dereq_(303);
-/**
- * Adds a header to the table containing the table name
- *
- * @param {EventBus} eventBus
- */
-function TableName(eventBus, sheet, tableName) {
-
-  BaseModule.call(this, eventBus, sheet, tableName);
-
-  this.node = domify('<header><h3>'+this.tableName+'</h3><div class="tjs-table-id mappings"></div></header');
-
-  var self = this;
-
-  eventBus.on('tableName.allowEdit', function(event) {
-    if (event.editAllowed) {
-      self.node.querySelector('.tjs-table-id').setAttribute('contenteditable', true);
-
-      self.node.querySelector('.tjs-table-id').addEventListener('blur', function(evt) {
-        var newId = evt.target.textContent;
-        if (newId !== self.getId()) {
-          eventBus.fire('tableName.editId', {
-            newId: newId
-          });
-        }
-      }, true);
-    }
-  });
-
-  this.semantic = null;
-}
-
-inherits(TableName, BaseModule);
-
-TableName.$inject = [ 'eventBus', 'sheet', 'config.tableName' ];
-
-module.exports = TableName;
-
-TableName.prototype.setSemantic = function(semantic) {
-  this.semantic = semantic;
-  this.setName(semantic.name);
-  this.setId(semantic.id);
-};
-
-TableName.prototype.setName = function(newName) {
-  this.semantic.name = newName;
-  this.node.querySelector('h3').textContent = newName || '';
-};
-
-TableName.prototype.getName = function() {
-  return this.semantic.name;
-};
-
-TableName.prototype.setId = function(newId) {
-  if (newId) {
-    this.semantic.id = newId;
-  }
-  
-  this.node.querySelector('div').textContent = this.semantic.id || '';
-};
-
-TableName.prototype.getId = function() {
-  return this.semantic.id;
-};
-
-},{"126":126,"264":264,"303":303}],54:[function(_dereq_,module,exports){
-module.exports = {
-  __init__: [ 'tableName' ],
-  tableName: [ 'type', _dereq_(53) ]
-};
-
-},{"53":53}],55:[function(_dereq_,module,exports){
+},{"52":52}],55:[function(_dereq_,module,exports){
 'use strict';
 
 var assign = _dereq_(250);
@@ -5332,13 +5341,13 @@ module.exports.elementToString = function(e) {
 },{}],63:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
-    _dereq_(33),
+    _dereq_(35),
     _dereq_(101)
   ],
   tableImporter: [ 'type', _dereq_(60) ]
 };
 
-},{"101":101,"33":33,"60":60}],64:[function(_dereq_,module,exports){
+},{"101":101,"35":35,"60":60}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var any = _dereq_(132);
@@ -6913,6 +6922,18 @@ Canvas.prototype._viewboxChanged = function() {
  * //   width, height
  * // }
  *
+ * // if the current diagram is zoomed and scrolled, you may reset it to the
+ * // default zoom via this method, too:
+ *
+ * var zoomedAndScrolledViewbox = canvas.viewbox();
+ *
+ * canvas.viewbox({
+ *   x: 0,
+ *   y: 0,
+ *   width: zoomedAndScrolledViewbox.outer.width,
+ *   height: zoomedAndScrolledViewbox.outer.height
+ * });
+ *
  * @param  {Object} [box] the new view box to set
  * @param  {Number} box.x the top left X coordinate of the canvas visible in view box
  * @param  {Number} box.y the top left Y coordinate of the canvas visible in view box
@@ -7172,14 +7193,7 @@ Canvas.prototype.getAbsoluteBBox = function(element) {
   if (element.waypoints) {
     var gfx = this.getGraphics(element);
 
-    var transformBBox = gfx.getBBox(true);
     bbox = gfx.getBBox();
-
-    bbox.x -= transformBBox.x;
-    bbox.y -= transformBBox.y;
-
-    bbox.width += 2 * transformBBox.x;
-    bbox.height +=  2 * transformBBox.y;
   }
   // shapes
   // use data
@@ -7277,9 +7291,13 @@ var svgAttr = _dereq_(322);
  *
  * A registry that keeps track of all shapes in the diagram.
  */
-function ElementRegistry() {
+function ElementRegistry(eventBus) {
   this._elements = {};
+
+  this._eventBus = eventBus;
 }
+
+ElementRegistry.$inject = [ 'eventBus' ];
 
 module.exports = ElementRegistry;
 
@@ -7342,6 +7360,11 @@ ElementRegistry.prototype.updateId = function(element, newId) {
   if (typeof element === 'string') {
     element = this.get(element);
   }
+
+  this._eventBus.fire('element.updateId', {
+    element: element,
+    newId: newId
+  });
 
   var gfx = this.getGraphics(element),
       secondaryGfx = this.getGraphics(element, true);
@@ -9593,7 +9616,7 @@ Overlays.prototype._addOverlay = function(overlay) {
       overlayContainer;
 
   // unwrap jquery (for those who need it)
-  if (html.get) {
+  if (html.get && html.constructor.prototype.jquery) {
     html = html.get(0);
   }
 
@@ -11173,7 +11196,7 @@ function layoutNext(lines, maxWidth, fakeText) {
     textBBox.width = fitLine ? textBBox.width : 0;
 
     // try to fit
-    if (fitLine === ' ' || fitLine === '' || textBBox.width < Math.round(maxWidth) || fitLine.length < 4) {
+    if (fitLine === ' ' || fitLine === '' || textBBox.width < Math.round(maxWidth) || fitLine.length < 2) {
       return fit(lines, fitLine, originalLine, textBBox);
     }
 
@@ -11183,16 +11206,9 @@ function layoutNext(lines, maxWidth, fakeText) {
 
 function fit(lines, fitLine, originalLine, textBBox) {
   if (fitLine.length < originalLine.length) {
-    var nextLine = lines[0] || '',
-        remainder = originalLine.slice(fitLine.length).trim();
+    var remainder = originalLine.slice(fitLine.length).trim();
 
-    if (/-\s*$/.test(remainder)) {
-      nextLine = remainder + nextLine.replace(/^\s+/, '');
-    } else {
-      nextLine = remainder + ' ' + nextLine;
-    }
-
-    lines[0] = nextLine;
+    lines.unshift(remainder);
   }
   return { width: textBBox.width, height: textBBox.height, text: fitLine };
 }
@@ -11249,6 +11265,26 @@ function shortenLine(line, width, maxWidth) {
 }
 
 
+function getHelperSvg() {
+  var helperSvg = document.getElementById('helper-svg');
+
+  if (!helperSvg) {
+    helperSvg = svgCreate('svg');
+
+    svgAttr(helperSvg, {
+      id: 'helper-svg',
+      width: 0,
+      height: 0,
+      style: 'visibility: hidden; position: fixed'
+    });
+
+    document.body.appendChild(helperSvg);
+  }
+
+  return helperSvg;
+}
+
+
 /**
  * Creates a new label utility
  *
@@ -11268,47 +11304,77 @@ function Text(config) {
   }, config || {});
 }
 
+/**
+ * Returns the layouted text as an SVG element.
+ *
+ * @param {String} text
+ * @param {Object} options
+ *
+ * @return {SVGText}
+ */
+Text.prototype.createText = function(text, options) {
+  return this.layoutText(text, options).element;
+};
 
 /**
- * Create a label in the parent node.
+ * Returns a labels layouted dimensions.
+ *
+ * @param {String} text to layout
+ * @param {Object} options
+ *
+ * @return {Dimensions}
+ */
+Text.prototype.getDimensions = function(text, options) {
+  return this.layoutText(text, options).dimensions;
+};
+
+/**
+ * Creates and returns a label and its bounding box.
  *
  * @method Text#createText
  *
- * @param {SVGElement} parent the parent to draw the label on
  * @param {String} text the text to render on the label
  * @param {Object} options
  * @param {String} options.align how to align in the bounding box.
- *                             Any of { 'center-middle', 'center-top' }, defaults to 'center-top'.
+ *                               Any of { 'center-middle', 'center-top' },
+ *                               defaults to 'center-top'.
  * @param {String} options.style style to be applied to the text
+ * @param {boolean} options.fitBox indicates if box will be recalculated to
+ *                                 fit text
  *
- * @return {SVGText} the text element created
+ * @return {Object} { element, dimensions }
  */
-Text.prototype.createText = function(parent, text, options) {
-
+Text.prototype.layoutText = function(text, options) {
   var box = merge({}, this._config.size, options.box || {}),
       style = merge({}, this._config.style, options.style || {}),
       align = parseAlign(options.align || this._config.align),
-      padding = parsePadding(options.padding !== undefined ? options.padding : this._config.padding);
+      padding = parsePadding(options.padding !== undefined ? options.padding : this._config.padding),
+      fitBox = options.fitBox || false;
 
   var lines = text.split(/\r?\n/g),
       layouted = [];
 
   var maxWidth = box.width - padding.left - padding.right;
 
-  // FF regression: ensure text is shown during rendering
-  // by attaching it directly to the body
-  var fakeText = svgCreate('text');
-  svgAttr(fakeText, { x: 0, y: 0 });
-  svgAttr(fakeText, style);
+  // ensure correct rendering by attaching helper text node to invisible SVG
+  var helperText = svgCreate('text');
+  svgAttr(helperText, { x: 0, y: 0 });
+  svgAttr(helperText, style);
 
-  svgAppend(parent, fakeText);
+  var helperSvg = getHelperSvg();
+
+  svgAppend(helperSvg, helperText);
 
   while (lines.length) {
-    layouted.push(layoutNext(lines, maxWidth, fakeText));
+    layouted.push(layoutNext(lines, maxWidth, helperText));
   }
 
   var totalHeight = reduce(layouted, function(sum, line, idx) {
     return sum + line.height;
+  }, 0);
+
+  var maxLineWidth = reduce(layouted, function(sum, line, idx) {
+    return line.width > sum ? line.width : sum;
   }, 0);
 
   // the y position of the next line
@@ -11327,8 +11393,8 @@ Text.prototype.createText = function(parent, text, options) {
 
   svgAttr(textElement, style);
 
-  svgAppend(parent, textElement);
-
+  // layout each line taking into account that parent
+  // shape might resize to fit text size
   forEach(layouted, function(line) {
     y += line.height;
 
@@ -11338,12 +11404,14 @@ Text.prototype.createText = function(parent, text, options) {
       break;
 
     case 'right':
-      x = (maxWidth - padding.right - line.width);
+      x = ((fitBox ? maxLineWidth : maxWidth)
+        - padding.right - line.width);
       break;
 
     default:
-        // aka center
-      x = Math.max(((maxWidth - line.width) / 2 + padding.left), 0);
+      // aka center
+      x = Math.max((((fitBox ? maxLineWidth : maxWidth)
+        - line.width) / 2 + padding.left), 0);
     }
 
     var tspan = svgCreate('tspan');
@@ -11354,12 +11422,18 @@ Text.prototype.createText = function(parent, text, options) {
     svgAppend(textElement, tspan);
   });
 
-  // remove fake text
-  svgRemove(fakeText);
+  svgRemove(helperText);
 
-  return textElement;
+  var dimensions = {
+    width: maxLineWidth,
+    height: totalHeight
+  };
+
+  return {
+    dimensions: dimensions,
+    element: textElement
+  };
 };
-
 
 module.exports = Text;
 
